@@ -32,3 +32,31 @@ https://bosh.io/docs/bosh-lite/#tips
     Alternatively Pause the VM from the VirtualBox UI before shutting down VirtualBox host, or making your computer sleep.
 
 =================================================================
+login after recreate/create
+
+export BOSH_CLIENT=admin
+export BOSH_CLIENT_SECRET=`bosh int ./creds.yml --path /admin_password`
+bosh alias-env vbox -e 192.168.56.6 --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca)
+
+
+bosh -e vbox env
+# Using environment '192.168.56.6' as '?'
+#
+# Name: ...
+# User: admin
+# Succeeded
+
+
+ref:
+https://bosh.io/docs/bosh-lite/
+
+=======================================================================
+login to bosh
+
+ export BOSH_CLIENT=admin
+ export BOSH_CLIENT_SECRET=`bosh int ./creds.yml --path /admin_password`
+ export BOS_ENVIRONMENT=vbox
+ bosh login
+ bosh login -help
+ bosh -e vbox vms
+
