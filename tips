@@ -1,0 +1,34 @@
+access jumbox from bosh
+
+bosh int creds.yml --path /jumpbox_ssh/private_key > jumpbox.key
+chmod 600 jumpbox.key
+ssh jumpbox@external-or-internal-ip -i jumpbox.key
+
+
+
+see ref at https://bosh.io/docs/jumpbox/
+just change the external-or-internal-ip by the director ip
+
+=================================================================
+=== vms director reboots
+=================================================================
+bosh create-env /root/bosh-env/virtualbox/bosh-deployment/bosh.yml \
+--state /root/bosh-env/virtualbox/state.json \
+--ops-file /root/bosh-env/virtualbox/bosh-deployment/virtualbox/cpi.yml \
+--ops-file /root/bosh-env/virtualbox/bosh-deployment/virtualbox/outbound-network.yml \
+--ops-file /root/bosh-env/virtualbox/bosh-deployment/bosh-lite.yml \
+--ops-file /root/bosh-env/virtualbox/bosh-deployment/uaa.yml \
+--ops-file /root/bosh-env/virtualbox/bosh-deployment/credhub.yml \
+--ops-file /root/bosh-env/virtualbox/bosh-deployment/jumpbox-user.yml \
+--vars-store /root/bosh-env/virtualbox/creds.yml --var director_name=bosh-lite \
+--var internal_ip=192.168.56.6 --var internal_gw=192.168.56.1 \
+--var internal_cidr=192.168.56.0/24 --var outbound_network_name=NatNetwork --recreate
+
+ref:
+https://bosh.io/docs/bosh-lite/#tips
+==>
+    In case VirtualBox VM shuts down or reboots, you will have to re-run create-env command from above with --recreate flag.
+    The containers will be lost after a VM restart, but you can restore your deployment with bosh cck command. 
+    Alternatively Pause the VM from the VirtualBox UI before shutting down VirtualBox host, or making your computer sleep.
+
+=================================================================
