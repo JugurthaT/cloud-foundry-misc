@@ -59,4 +59,59 @@ login to bosh
  bosh login
  bosh login -help
  bosh -e vbox vms
+ export BOSH_ENVIRONMENT=vbox   ==> to avoid adding -e vbox everytime
+ 
+ 
+ =====================================================================
+ deploy postgresql
+ 
+ bosh upload-release https://bosh.io/d/github.com/cloudfoundry/postgres-release
+        [root@adem virtualbox]# bosh releases
+        Using environment '192.168.56.6' as client 'admin'
 
+        Name       Version  Commit Hash
+        postgres   44       e225d15
+        zookeeper  0.0.10*  c4eccf2
+
+        (*) Currently deployed
+        (+) Uncommitted changes
+
+        2 releases
+
+Succeeded
+
+========================================================================
+deploy redis
+
+    export BOSH_DEPLOYMENT=redis
+ 
+clone it
+    git clone  https://github.com/cloudfoundry-community/redis-boshrelease.git
+    bosh deploy redis-boshrelease/manifests/redis.yml   ==> error with stemcell so download it
+    bosh us https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-xenial-go_agent?v=621.125  ==> and deply again
+    bosh deploy redis-boshrelease/manifests/redis.yml
+    bosh vms  ==> check vm status
+    bosh -d redis logs ==> to download the logs they were empty
+    
+ monitor script:
+    [root@adem redis-boshrelease]#  cat ./jobs/redis/monit
+
+    check process redis
+        with pidfile /var/vcap/sys/run/bpm/redis/redis.pid
+        start program "/var/vcap/jobs/bpm/bin/bpm start redis"
+         stop program "/var/vcap/jobs/bpm/bin/bpm stop redis"
+         group vcap
+         
+  ssh to the vm:
+        bosh ssh  redis/147b6868-6dac-45a1-89c3-d708dc3582aa
+        sudo su  ==> to become root
+        
+redis/147b6868-6dac-45a1-89c3-d708dc3582aa:/var/vcap/bosh_ssh/bosh_e1c02868cc8f415# /var/vcap/jobs/bpm/bin/bpm start redis
+Error: failed to start job-process: exit status 1
+
+
+
+        
+
+    
+    
