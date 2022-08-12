@@ -110,6 +110,29 @@ redis/147b6868-6dac-45a1-89c3-d708dc3582aa:/var/vcap/bosh_ssh/bosh_e1c02868cc8f4
 Error: failed to start job-process: exit status 1
 
 
+===================================================================
+credhub q ete installe sur le director
+
+ 1043  export CREDHUB_SECRET=$(bosh interpolate ./creds.yml --path=/credhub_admin_client_secret)
+ 1044  export CREDHUB_CA_CERT="$(bosh interpolate ./creds.yml --path=/credhub_tls/ca )"$'\n'"$(bosh interpolate ./creds.yml --path=/uaa_ssl/ca)"
+ 
+ credhub --version
+CLI Version: 2.2.0
+Server Version: 2.12.7
+
+ credhub find -n cf_admin_password
+   credentials:
+  - name: /bosh-lite/cf/cf_admin_password
+   version_created_at: "2022-08-11T02:37:14Z"
+   
+   
+   ======================================================================
+   access local cf
+   cf login -a https://api.bosh-lite.com --skip-ssl-validation -u admin -p $(credhub get -n /bosh-lite/cf/cf_admin_password -q)
+   
+  
+
+
 
         
 
