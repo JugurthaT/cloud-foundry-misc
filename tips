@@ -131,6 +131,14 @@ Server Version: 2.12.7
    cf login -a https://api.bosh-lite.com --skip-ssl-validation -u admin -p $(credhub get -n /bosh-lite/cf/cf_admin_password -q)
    
   
+  ===========================================================
+  inter container communications
+  
+  map-route test-python-flask apps.internal --hostname test-python-flask
+  cf ssh simplemaintenance
+   curl test-python-flask.apps.internal:8080
+Hello World from Flask!
+=================================================================
 
 
 
