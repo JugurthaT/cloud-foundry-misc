@@ -138,9 +138,22 @@ Server Version: 2.12.7
   cf ssh simplemaintenance
    curl test-python-flask.apps.internal:8080
 Hello World from Flask!
+
+
+
+verify policies:
+Listing network policies in org cloudfoundry / space development as admin...
+
+source              destination         protocol   ports   destination space   destination org
+simplemaintenance   test-python-flask   tcp        5000    development         cloudfoundry
+simplemaintenance   test-python-flask   tcp        8080    development         cloudfoundry
+
 =================================================================
 
+stop deployment vms :
+bosh -d jumpbox stop --hard
 
+bosh -d jumpbox stop ==> will stop just the processes not the vms
 
         
 
