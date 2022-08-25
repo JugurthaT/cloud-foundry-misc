@@ -111,7 +111,7 @@ Error: failed to start job-process: exit status 1
 
 
 ===================================================================
-credhub q ete installe sur le director
+credhub a ete installe sur le director
 
  1043  export CREDHUB_SECRET=$(bosh interpolate ./creds.yml --path=/credhub_admin_client_secret)
  1044  export CREDHUB_CA_CERT="$(bosh interpolate ./creds.yml --path=/credhub_tls/ca )"$'\n'"$(bosh interpolate ./creds.yml --path=/uaa_ssl/ca)"
