@@ -155,7 +155,14 @@ bosh -d jumpbox stop --hard
 
 bosh -d jumpbox stop ==> will stop just the processes not the vms
 
-        
+===========================================================================
+gorouter troubleshooting
+check the routing table
+ssh to the gorouter vm using bosh ssh for example
+/var/vcap/jobs/gorouter/bin/retrieve-local-routes | jq .
+it will show the routing table
+
+==============================================================================
 
     
     
