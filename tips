@@ -164,5 +164,35 @@ it will show the routing table
 
 ==============================================================================
 
+1. Get the intended diego_cell id from the output of bosh vms.
+
+
+For example, the cell_id for the diego_cell named as: diego_cell/0ee6797d-934c-4fb1-9e16-e183b8e22e78 will be "0ee6797d-934c-4fb1-9e16-e183b8e22e78".
+ 
+
+2. bosh ssh into the diego_cell and run the below cfdot command:
+
+cfdot cell-state <cell-id> | jq -r '. | "\ndiego_cell:", .cell_id, "\n", "App-Guids:", .LRPs[].process_guid[0:36]'
+
+Note: Replace the above cell_id with the actual cell_id.
+
+
+For example: 
+
+cfdot cell-state  0ee6797d-934c-4fb1-9e16-e183b8e22e78 | jq -r '. | "\ndiego_cell:", .cell_id, "\n", "App-Guids:", .LRPs[].process_guid[0:36]'
+
+3. The output from step 2 will give the application guid's running in the diego_cell, and the corresponding application names can be pulled from the cf CLI (Cloud Foundry Command Line Interface) as below:
+
+cf curl /v2/apps/$i/stats | grep name | uniq
+
+Running cf CLI command for multiple guid's can also be automated as shown below:
+
+    Copy all the app guid to a file and you can run something like the below for loop against the file (replace the filename in the below loop)
+
+for i in $(cat filename); do 
+    echo $(cf curl /v2/apps/$i/stats | grep name | uniq)
+done
+
+https://community.pivotal.io/s/article/How-to-find-which-Apps-are-Running-in-a-Diego-Cell?language=en_US
     
     
