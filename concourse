@@ -1,0 +1,61 @@
+deploy Concourse on docker compose:
+https://concourse-ci.org/quick-start.html
+
+if you get an error with iptable filter table then run this command 
+ modprobe iptable_filter
+ 
+ also change this line in yaml file as per below:
+ CONCOURSE_EXTERNAL_URL: http://192.168.2.32:8080
+ 
+ the above links shows how to create a pipeline using fly and yml file.
+ 
+ how to login to concourse
+  fly -t tutorial login -c http://192.168.2.32:8080 -u test -p test
+ the credentials come from the yml file. 192.168.2.32 is the docker host
+ 
+ fly -t tutorial pipelines  # to list the pipelines defined
+ id  name         paused  public  last updated
+1   hello-world  no      no      2022-08-31 11:29:21 -0400 EDT
+
+to get the jobs of the aboive pipeline:
+fly -t tutorial jobs -p hello-world
+
+name             paused  status     next
+hello-world-job  no      succeeded  n/a
+
+to get the logs for a job :
+
+ fly -t tutorial watch -j hello-world/hello-world-job
+initializing
+initializing check: image
+selected worker: 1d570efb35cb
+selected worker: 1d570efb35cb
+fetching busybox@sha256:ef320ff10026a50cf5f0213d35537ce0041ac1d96e9b7800bafd8bc9eff6c693
+50783e0dfb64 [======================================] 755.1KiB/755.1KiB
+selected worker: 1d570efb35cb
+running echo Hello world!
+Hello world!
+
+list concourse containers :
+tfly containers
+
+
+small alias:
+alias tfly='fly -t tutorial'
+
+show builds:
+ tfly builds
+id  name                           status     start                     end                       duration  team  created by
+2   hello-world/hello-world-job/2  succeeded  2022-08-31@13:11:49-0400  2022-08-31@13:11:53-0400  4s        main  test
+1   hello-world/hello-world-job/1  succeeded  2022-08-31@11:29:47-0400  2022-08-31@11:29:56-0400  9s        main  test
+
+validate a config before submitting:
+ tfly validate-pipeline -c hello-world.yml
+ looks good
+ 
+# trigger the job and watch it run to completion
+
+
+
+
+
