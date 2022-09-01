@@ -54,6 +54,67 @@ validate a config before submitting:
  looks good
  
 # trigger the job and watch it run to completion
+ fly -t tutorial trigger-job --job hello-world/hello-world-job --watch
+started hello-world/hello-world-job #3
+
+initializing
+initializing check: image
+selected worker: 1d570efb35cb
+selected worker: 1d570efb35cb
+fetching busybox@sha256:09439c073bd3eb029a91c72eff2c0d9f12ab9c84f66bdef360fcf3f91a81bf7c
+aa49f28a0db9 [======================================] 755.4KiB/755.4KiB
+selected worker: 1d570efb35cb
+running echo Hello world!
+Hello world!
+succeeded
+
+after making changes to teh pipeline:
+fly -t tutorial set-pipeline -p hello-world -c hello-world.yml
+
+jobs:
+  job hello-world-job has changed:
+  name: hello-world-job
+  plan:
+  - config:
+      image_resource:
+        name: ""
+        source:
+          repository: busybox
+        type: registry-image
++     outputs:
++     - name: the-artifact
+      platform: linux
+      run:
+        args:
+-       - Hello world!
+-       path: echo
++       - -lF
++       path: ls
+    task: hello-world-task
+
+pipeline name: hello-world
+
+apply configuration? [yN]: y
+configuration updated
+[root@adem hello-world]# fly -t tutorial trigger-job --job hello-world/hello-world-job --watch
+started hello-world/hello-world-job #6
+
+initializing
+initializing check: image
+selected worker: 1d570efb35cb
+selected worker: 1d570efb35cb
+INFO: found existing resource cache
+
+selected worker: 1d570efb35cb
+running ls -lF
+total 0
+drwxr-xr-x    2 root     root             6 Aug 31 18:20 the-artifact/
+succeeded
+
+
+
+
+
 
 
 
